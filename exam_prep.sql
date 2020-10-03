@@ -61,3 +61,20 @@ MEMBER FUNCTION priceInUSD(rate FLOAT) RETURN FLOAT IS
         RETURN rate * SELF.price;
     END priceInUSD;
 END
+
+-- mb 2
+ALTER TYPE stock_type
+ADD MEMBER FUNCTION yield RETURN FLOAT
+CASCADE
+/
+
+CREATE OR REPLACE TYPE BODY stock_type AS
+MEMBER FUNCTION yield RETURN FLOAT IS
+    BEGIN
+        RETURN ((SELF.individend/self.cprice) * 100);
+    END
+END;
+
+SELECT s.company, s.yield()
+FROM stock_tbl s
+/
