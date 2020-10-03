@@ -118,3 +118,23 @@ MEMBER FUNCTION no_of_trades RETURN INTEGER IS
         RETURN countt;
     END no_of_trades;
 END
+
+-- mb client
+ALTER TYPE client_type
+ADD MEMBER FUNCTION tot_purchase_val RETURN FLOAT
+CASCADE
+/
+
+CREATE TYPE BODY client_type AS
+MEMBER FUNCTION tot_purchase_val RETURN FLOAT IS
+    pvalue FLOAT;
+    BEGIN
+        SELECT SUM(i.pprice*i.qty) INTO pvalue
+        FROM TABLE(SELF.invesments) i;
+        RETURN pvalue;
+    END tot_purchase_val;
+END;
+
+SELECT c.cno, c.tot_purchase_val()
+FROM client_tbl c;
+
